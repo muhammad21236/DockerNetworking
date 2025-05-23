@@ -1,0 +1,37 @@
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:8.0.3
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - db-net
+
+  api:
+    container_name: nodeapp
+    depends_on:
+      - mongodb
+    build:
+      context: ./API-jokes
+      dockerfile: Dockerfile
+    image: node-api-image
+    ports:
+      - "5000:5000"
+    develop:
+      watch:
+        - path: ./API-jokes
+          action: sync
+          target: /app
+          ignore:
+            - .git
+            - node_modules
+    networks:
+      - db-net
+
+volumes:
+  mongodbdata:
+
+networks:
+  db-net:
