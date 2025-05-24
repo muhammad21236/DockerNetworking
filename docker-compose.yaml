@@ -23,6 +23,9 @@ services:
       - "5000:5000"
     env_file:
       - ./env/server.env
+    networks:
+      - db-net
+      - server-net
     develop:
       watch:
         - path: ./API-jokes
@@ -31,11 +34,36 @@ services:
           ignore:
             - .git
             - node_modules
+  client:
+    stdin_open: true
+    tty: true
+    container_name: reactapp
+    depends_on:
+      - api
+    build:
+      context: ./react-client
+      dockerfile: Dockerfile.prod
+    image: react-client-image
+    ports:
+      - "80:80"
+    env_file:
+      - ./env/server.env
     networks:
-      - db-net
+      - server-net
+    develop:
+      watch:
+        - path: ./react-client
+          action: sync
+          target: /app
+          ignore:
+            - .git
+            - node_modules
+            - dist
+    
 
 volumes:
   mongodbdata:
 
 networks:
   db-net:
+  server-net:
