@@ -11,7 +11,7 @@ main().catch(err => console.log(err));
 
 
 async function main() {
-  await mongoose.connect('mongodb://mongodb:27017/mukeshdb');  
+  await mongoose.connect(`${process.env.MONGOURI}`);  
 }
 
 mongoose.connection.on('connected',()=>{

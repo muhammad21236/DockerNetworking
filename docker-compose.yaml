@@ -4,6 +4,8 @@ services:
     image: mongo:8.0.3
     volumes:
       - mongodbdata:/data/db
+    env_file:
+      - ./env/mongo.env
     ports:
       - "27017:27017"
     networks:
@@ -19,6 +21,8 @@ services:
     image: node-api-image
     ports:
       - "5000:5000"
+    env_file:
+      - ./env/server.env
     develop:
       watch:
         - path: ./API-jokes
